@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART SMOKE DETECTOR - Presentasi STEAM</title>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --primary-dark: #0f172a;
+            --navy-main: #1e3a8a;
+            --blue-accent: #2563eb;
+            --blue-light: #38bdf8;
+            --blue-bg: #f0f7ff;
+            --border-color: #cbd5e1;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --grid-line: rgba(37, 99, 235, 0.08);
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        /* Engineering Grid Background */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Top Bar Header */
+        header {
+            position: relative;
+            z-index: 10;
+            height: 60px;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--navy-main);
+            letter-spacing: 1px;
+        }
+
+        .brand-badge {
+            background: var(--blue-accent);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .slide-indicator {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy-main);
+            letter-spacing: 2px;
+            background: #e0f2fe;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #bae6fd;
+        }
+
+        /* Slide Container */
+        .presentation-container {
+            position: relative;
+            z-index: 5;
+            flex: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 2rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Typography & Utilities */
+        .title-tag {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--blue-accent);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .title-tag::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--blue-accent);
+        }
+
+        .slide-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        /* Bottom Controls Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            height: 70px;
+            padding: 0 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .nav-btn {
+            background: var(--surface-color);
+            border: 2px solid var(--navy-main);
+            color: var(--navy-main);
+            padding: 10px 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--navy-main);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+        }
+
+        .nav-btn:disabled {
+            border-color: var(--border-color);
+            color: var(--border-color);
+            cursor: not-allowed;
+        }
+
+        /* SLIDE 01: COVER */
+        .cover-content {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .cover-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--navy-main);
+            line-height: 1.1;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .cover-text h2 {
+            font-size: 1.35rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .badge-steam {
+            display: inline-block;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: var(--blue-accent);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .author-box {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed var(--border-color);
+            display: flex;
+            gap: 2rem;
+        }
+
+        .author-item {
+            font-size: 0.9rem;
+        }
+
+        .author-item label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .author-item value {
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        /* 3D Smart Smoke Detector Box Representation */
+        .box-3d-wrapper {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .device-3d {
+            width: 300px;
+            height: 200px;
+            background: linear-gradient(145deg, #ffffff, #e2e8f0);
+            border: 3px solid var(--navy-main);
+            border-radius: 12px;
+            box-shadow: 20px 20px 40px rgba(15, 23, 42, 0.15),
+                        inset -4px -4px 8px rgba(0,0,0,0.05);
+            position: relative;
+            transform: rotateX(15deg) rotateY(-20deg);
+            transition: transform 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .device-3d:hover {
+            transform: rotateX(10deg) rotateY(-10deg) scale(1.02);
+        }
+
+        .device-label-dim {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--blue-accent);
+            font-weight: 700;
+        }
+
+        .dim-w { top: -25px; left: 50%; transform: translateX(-50%); }
+        .dim-h { right: -65px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+        .sensor-mq2 {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #94a3b8 30%, #475569 70%);
+            border: 4px solid #cbd5e1;
+            margin: 10px auto;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sensor-mq2::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px dashed #e2e8f0;
+        }
+
+        .indicator-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .led-red {
+            width: 18px;
+            height: 18px;
+            background: var(--danger);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--danger);
+            animation: blink 1.5s infinite alternate;
+        }
+
+        @keyframes blink {
+            from { opacity: 0.4; }
+            to { opacity: 1; filter: drop-shadow(0 0 8px var(--danger)); }
+        }
+
+        .buzzer-piezo {
+            width: 28px;
+            height: 28px;
+            background: #1e293b;
+            border-radius: 50%;
+            border: 2px solid #64748b;
+            position: relative;
+        }
+
+        .buzzer-piezo::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px; height: 10px;
+            background: #000;
+            border-radius: 50%;
+        }
+
+        /* SLIDE 02: PROBLEM & SOLUTION */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: stretch;
+        }
+
+        .card-panel {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-problem { border-left: 5px solid var(--danger); }
+        .card-solution { border-left: 5px solid var(--blue-accent); background: #f0f7ff; }
+
+        .card-panel h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .list-styled {
+            list-style: none;
+        }
+
+        .list-styled li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        .list-styled li::before {
+            content: '▲';
+            position: absolute;
+            left: 0;
+            color: var(--danger);
+            font-size: 0.7rem;
+            top: 4px;
+        }
+
+        .vs-comparison {
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px dashed var(--blue-accent);
+        }
+
+        .vs-box {
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .vs-arrow {
+            font-size: 1.2rem;
+            color: var(--blue-accent);
+            font-weight: bold;
+            padding: 0 10px;
+        }
+
+        /* SLIDE 03: BLUEPRINT */
+        .blueprint-container {
+            background: #091e3a;
+            color: #ffffff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            background-image: 
+                linear-gradient(to right, rgba(56, 189, 248, 0.15) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(56, 189, 248, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border: 2px solid var(--blue-accent);
+        }
+
+        .blueprint-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .bp-view {
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            background: rgba(15, 23, 42, 0.6);
+            padding: 1rem;
+            border-radius: 6px;
+            text-align: center;
+            position: relative;
+        }
+
+        .bp-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--blue-light);
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .bp-cad-box {
+            height: 140px;
+            border: 2px solid #38bdf8;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .bp-dim-line {
+            position: absolute;
+            border: 1px solid #38bdf8;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: #38bdf8;
+        }
+
+        .bp-label-point {
+            position: absolute;
+            background: rgba(37, 99, 235, 0.8);
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* SLIDE 04: HOW IT WORKS */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 2rem 0;
+            gap: 8px;
+        }
+
+        .flow-step {
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+            flex: 1;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .flow-step.active-step {
+            border-color: var(--blue-accent);
+            background: var(--blue-bg);
+            transform: translateY(-5px);
+        }
+
+        .flow-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--blue-accent);
+            margin-bottom: 4px;
+        }
+
+        .flow-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--primary-dark);
+        }
+
+        .flow-arrow {
+            color: var(--blue-accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .explain-box {
+            background: #f8fafc;
+            border-left: 4px solid var(--navy-main);
+            padding: 1.2rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 1rem;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        /* SLIDE 05: COMPONENTS & TIMELINE */
+        .comp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+        }
+
+        .comp-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .comp-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface-color);
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .comp-qty {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--blue-accent);
+            background: #eff6ff;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid var(--border-color);
+        }
+
+        .tl-item {
+            position: relative;
+            margin-bottom: 14px;
+            padding-left: 15px;
+        }
+
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--blue-accent);
+            border: 2px solid white;
+        }
+
+        .tl-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--blue-accent);
+        }
+
+        .tl-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .safety-note {
+            margin-top: 1rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        /* SLIDE 06: STEAM INTEGRATION */
+        .steam-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 1rem;
+        }
+
+        .steam-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.2rem 1rem;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .steam-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+        }
+
+        .steam-card::top {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+        }
+
+        .sc-s { border-top: 4px solid #ef4444; }
+        .sc-t { border-top: 4px solid #3b82f6; }
+        .sc-e { border-top: 4px solid #10b981; }
+        .sc-a { border-top: 4px solid #f59e0b; }
+        .sc-m { border-top: 4px solid #8b5cf6; }
+
+        .steam-letter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .steam-card .sc-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .steam-card p {
+            font-size: 0.85rem;
+            color: #334155;
+            line-height: 1.4;
+        }
+
+        /* SLIDE 07: CONCLUSION */
+        .conclusion-wrapper {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tagline-big {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--navy-main);
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+        }
+
+        .conclusion-text {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #334155;
+            margin-bottom: 2.5rem;
+        }
+
+        .summary-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sf-box {
+            background: var(--blue-bg);
+            border: 1px solid #bfdbfe;
+            padding: 1.2rem;
+            border-radius: 8px;
+        }
+
+        .sf-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--blue-accent);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .sf-desc {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 1rem;
+        }
+
+        .closing-quote {
+            font-style: italic;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--navy-main);
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .cover-content, .grid-2col, .comp-grid {
+                grid-template-columns: 1fr;
+            }
+            .blueprint-grid, .steam-grid, .summary-features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .flow-container {
+                flex-direction: column;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+            .slide {
+                padding: 1rem 1.5rem;
+                overflow-y: auto;
+            }
+            .slide-title {
+                font-size: 1.6rem;
+            }
+            .cover-text h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-bg"></div>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="brand">
+            <span class="brand-badge">STEAM</span>
+            <span>ENGINEERING PROJECT</span>
+        </div>
+        <div class="slide-indicator" id="slideIndicator">01 / 07</div>
+    </header>
+
+    <!-- Presentation Canvas -->
+    <main class="presentation-container">
+
+        <!-- SLIDE 01: COVER -->
+        <section class="slide active" id="slide-1">
+            <div class="cover-content">
+                <div class="cover-text">
+                    <span class="badge-steam">PROYEK INOVASI STEAM</span>
+                    <h1>SMART SMOKE DETECTOR</h1>
+                    <h2>Alat Pendeteksi Asap sebagai Peringatan Dini Kebakaran</h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Rekayasa Teknologi Terintegrasi</p>
+                    
+                    <div class="author-box">
+                        <div class="author-item">
+                            <label>Kelompok</label>
+                            <value>Nama Kelompok</value>
+                        </div>
+                        <div class="author-item">
+                            <label>Kelas</label>
+                            <value>Kelas IX A</value>
+                        </div>
+                        <div class="author-item">
+                            <label>Instansi</label>
+                            <value>SMP Negeri 1 Seyegan</value>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box-3d-wrapper">
+                    <div class="device-3d">
+                        <span class="device-label-dim dim-w">15 cm</span>
+                        <span class="device-label-dim dim-h">10 cm</span>
+                        <div style="text-align: center; font-family: 'JetBrains Mono'; font-size: 0.65rem; color: #64748b;">3D PRODUCT PRESENTATION</div>
+                        <div class="sensor-mq2"></div>
+                        <div class="indicator-row">
+                            <div class="led-red" title="LED Merah"></div>
+                            <div class="buzzer-piezo" title="Buzzer 5V"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 02: MASALAH & SOLUSI -->
+        <section class="slide" id="slide-2">
+            <div class="title-tag">ANALISIS UTAMA</div>
+            <h2 class="slide-title">MASALAH & SOLUSI</h2>
+
+            <div class="grid-2col">
+                <div class="card-panel card-problem">
+                    <h3 style="color: var(--danger);">⚠️ MASALAH</h3>
+                    <ul class="list-styled">
+                        <li>Kebakaran dapat terjadi karena berbagai faktor yang tidak terduga.</li>
+                        <li>Asap sering menjadi tanda awal sebelum api membesar dan tidak terkendali.</li>
+                        <li>Keterlambatan mengetahui adanya asap dapat meningkatkan risiko fatalitas dan kerugian.</li>
+                    </ul>
+                </div>
+
+                <div class="card-panel card-solution">
+                    <h3 style="color: var(--navy-main);">💡 SOLUSI</h3>
+                    <p style="font-weight: 700; font-size: 1.1rem; color: var(--navy-main); margin-bottom: 8px;">SMART SMOKE DETECTOR</p>
+                    <p style="font-size: 0.95rem; line-height: 1.5; color: #334155;">
+                        Smart Smoke Detector menggunakan sensor <strong>MQ-2</strong> untuk mendeteksi asap. Data dari sensor diproses oleh <strong>Arduino UNO R3</strong>, kemudian buzzer berbunyi dan LED merah menyala sebagai peringatan dini.
+                    </p>
+
+                    <div class="vs-comparison">
+                        <div class="vs-box" style="color: var(--danger);">MASALAH<br><span style="font-weight: normal; font-size: 0.75rem;">Asap tidak segera diketahui</span></div>
+                        <div class="vs-arrow">➔</div>
+                        <div class="vs-box" style="color: var(--navy-main);">SOLUSI<br><span style="font-weight: normal; font-size: 0.75rem;">Sensor mendeteksi & memberi peringatan</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 03: BLUEPRINT -->
+        <section class="slide" id="slide-3">
+            <div class="title-tag">SKEMATIK TEKNIS</div>
+            <h2 class="slide-title">DIGITAL BLUEPRINT</h2>
+
+            <div class="blueprint-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(56, 189, 248, 0.3); padding-bottom: 8px;">
+                    <span style="font-family: 'JetBrains Mono'; font-size: 0.85rem; color: var(--blue-light);">SPESIFIKASI CASING: 15 × 10 × 5 CM</span>
+                    <span style="font-family: 'JetBrains Mono'; font-size: 0.75rem; color: #94a3b8;">SCALE 1:1 / CAD DRAFT</span>
+                </div>
+
+                <div class="blueprint-grid">
+                    <!-- Tampak Depan -->
+                    <div class="bp-view">
+                        <div class="bp-title">1. Tampak Depan</div>
+                        <div class="bp-cad-box" style="width: 120px; height: 80px;">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid #38bdf8;"></div>
+                            <div style="width: 8px; height: 8px; background: #ef4444; border-radius: 50%; position: absolute; left: 15px; bottom: 15px;"></div>
+                            <div style="width: 12px; height: 12px; background: #38bdf8; border-radius: 50%; position: absolute; right: 15px; bottom: 15px;"></div>
+                        </div>
+                        <div style="font-size: 0.65rem; color: #94a3b8; margin-top: 6px;">15 cm × 10 cm</div>
+                    </div>
+
+                    <!-- Tampak Atas -->
+                    <div class="bp-view">
+                        <div class="bp-title">2. Tampak Atas</div>
+                        <div class="bp-cad-box" style="width: 120px; height: 50px;">
+                            <div style="border: 1px dashed #38bdf8; width: 80%; height: 60%;"></div>
+                        </div>
+                        <div style="font-size: 0.65rem; color: #94a3b8; margin-top: 6px;">15 cm × 5 cm</div>
+                    </div>
+
+                    <!-- Tampak Samping -->
+                    <div class="bp-view">
+                        <div class="bp-title">3. Tampak Samping</div>
+                        <div class="bp-cad-box" style="width: 60px; height: 80px;">
+                            <div style="width: 4px; height: 20px; background: #38bdf8; position: absolute; left: -2px;"></div>
+                        </div>
+                        <div style="font-size: 0.65rem; color: #94a3b8; margin-top: 6px;">10 cm × 5 cm</div>
+                    </div>
+
+                    <!-- Exploded View -->
+                    <div class="bp-view">
+                        <div class="bp-title">4. Exploded View (Bagian Dalam)</div>
+                        <div class="bp-cad-box" style="width: 120px; height: 80px; flex-direction: column; gap: 4px;">
+                            <div style="font-size: 0.55rem; border: 1px solid #38bdf8; padding: 2px;">MQ-2 | Arduino UNO R3</div>
+                            <div style="font-size: 0.55rem; border: 1px solid #38bdf8; padding: 2px;">Breadboard + Buzzer + LED</div>
+                        </div>
+                        <div style="font-size: 0.65rem; color: #94a3b8; margin-top: 6px;">Internal Assembly</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1rem; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                    <span class="bp-label-point">Sensor MQ-2</span>
+                    <span class="bp-label-point">Arduino UNO R3</span>
+                    <span class="bp-label-point">Breadboard</span>
+                    <span class="bp-label-point">Buzzer 5V</span>
+                    <span class="bp-label-point">LED Merah</span>
+                    <span class="bp-label-point">Kabel Jumper</span>
+                    <span class="bp-label-point">Casing (15×10×5 cm)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 04: CARA KERJA -->
+        <section class="slide" id="slide-4">
+            <div class="title-tag">SISTEM ALUR PERANGKAT</div>
+            <h2 class="slide-title">HOW IT WORKS</h2>
+
+            <div class="flow-container">
+                <div class="flow-step">
+                    <div class="flow-num">01</div>
+                    <div class="flow-title">ASAP</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="flow-num">02</div>
+                    <div class="flow-title">SENSOR MQ-2</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step active-step">
+                    <div class="flow-num">03</div>
+                    <div class="flow-title">ARDUINO UNO R3</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="flow-num">04</div>
+                    <div class="flow-title">PEMROSESAN DATA</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step" style="border-color: var(--danger);">
+                    <div class="flow-num" style="color: var(--danger);">05</div>
+                    <div class="flow-title">BUZZER & LED MENYALA</div>
+                </div>
+                <div class="flow-arrow">➔</div>
+                <div class="flow-step">
+                    <div class="flow-num">06</div>
+                    <div class="flow-title">PERINGATAN PENGGUNA</div>
+                </div>
+            </div>
+
+            <div class="explain-box">
+                Ketika sensor MQ-2 mendeteksi asap, Arduino UNO R3 memproses data dari sensor. Jika kondisi memenuhi batas yang telah ditentukan, buzzer akan berbunyi dan LED merah menyala sebagai tanda peringatan.
+            </div>
+        </section>
+
+        <!-- SLIDE 05: KOMPONEN & PROSES PEMBUATAN -->
+        <section class="slide" id="slide-5">
+            <div class="title-tag">MANUFAKTUR & MERANGKAI</div>
+            <h2 class="slide-title">KOMPONEN & PROSES PEMBUATAN</h2>
+
+            <div class="comp-grid">
+                <div>
+                    <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--navy-main);">DAFTAR KOMPONEN</h3>
+                    <div class="comp-list">
+                        <div class="comp-item"><span>Arduino UNO R3</span> <span class="comp-qty">1 pcs</span></div>
+                        <div class="comp-item"><span>Sensor MQ-2</span> <span class="comp-qty">1 pcs</span></div>
+                        <div class="comp-item"><span>Buzzer 5V</span> <span class="comp-qty">1 pcs</span></div>
+                        <div class="comp-item"><span>LED Merah</span> <span class="comp-qty">1 pcs</span></div>
+                        <div class="comp-item"><span>Breadboard</span> <span class="comp-qty">1 pcs</span></div>
+                        <div class="comp-item"><span>Kabel Jumper</span> <span class="comp-qty">secukupnya</span></div>
+                        <div class="comp-item"><span>Casing (15×10×5 cm)</span> <span class="comp-qty">1 pcs</span></div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--navy-main);">TAHAP PEMBUATAN</h3>
+                    <div class="timeline">
+                        <div class="tl-item">
+                            <span class="tl-num">TAHAP 01</span>
+                            <div class="tl-text">Menyiapkan semua komponen</div>
+                        </div>
+                        <div class="tl-item">
+                            <span class="tl-num">TAHAP 02</span>
+                            <div class="tl-text">Menghubungkan MQ-2 ke Arduino</div>
+                        </div>
+                        <div class="tl-item">
+                            <span class="tl-num">TAHAP 03</span>
+                            <div class="tl-text">Memasang LED dan buzzer</div>
+                        </div>
+                        <div class="tl-item">
+                            <span class="tl-num">TAHAP 04</span>
+                            <div class="tl-text">Memprogram Arduino</div>
+                        </div>
+                        <div class="tl-item">
+                            <span class="tl-num">TAHAP 05</span>
+                            <div class="tl-text">Memasukkan rangkaian ke casing dan melakukan pengujian</div>
+                        </div>
+                    </div>
+
+                    <div class="safety-note">
+                        🛡️ <span><strong>Catatan Keselamatan:</strong> Pengujian dilakukan dengan aman dan tidak menggunakan api secara langsung.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 06: PENERAPAN STEAM -->
+        <section class="slide" id="slide-6">
+            <div class="title-tag">KERANGKA KERJA INTEGRASI</div>
+            <h2 class="slide-title">STEAM INTEGRATION</h2>
+
+            <div class="steam-grid">
+                <div class="steam-card sc-s">
+                    <div class="steam-letter" style="color: #ef4444;">S</div>
+                    <div class="sc-title">Science</div>
+                    <p>Sensor MQ-2 digunakan untuk mendeteksi keberadaan asap/gas di udara.</p>
+                </div>
+
+                <div class="steam-card sc-t">
+                    <div class="steam-letter" style="color: #3b82f6;">T</div>
+                    <div class="sc-title">Technology</div>
+                    <p>Arduino UNO R3 digunakan untuk membaca dan memproses data dari sensor.</p>
+                </div>
+
+                <div class="steam-card sc-e">
+                    <div class="steam-letter" style="color: #10b981;">E</div>
+                    <div class="sc-title">Engineering</div>
+                    <p>Komponen dirancang dan dirangkai menjadi satu alat pendeteksi asap.</p>
+                </div>
+
+                <div class="steam-card sc-a">
+                    <div class="steam-letter" style="color: #f59e0b;">A</div>
+                    <div class="sc-title">Art</div>
+                    <p>Casing dibuat sederhana, rapi, menarik, dan mudah digunakan.</p>
+                </div>
+
+                <div class="steam-card sc-m">
+                    <div class="steam-letter" style="color: #8b5cf6;">M</div>
+                    <div class="sc-title">Mathematics</div>
+                    <p>Digunakan untuk menentukan ukuran casing, posisi komponen, serta jarak antarbagian.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 07: KESIMPULAN -->
+        <section class="slide" id="slide-7">
+            <div class="conclusion-wrapper">
+                <div class="title-tag" style="justify-content: center;">RINGKASAN PROYEK</div>
+                <div class="tagline-big">SMARTER • SAFER • EARLIER</div>
+
+                <p class="conclusion-text">
+                    “Smart Smoke Detector merupakan inovasi sederhana berbasis Arduino yang dapat mendeteksi asap dan memberikan peringatan dini melalui buzzer dan LED. Produk ini diharapkan dapat membantu meningkatkan kesadaran terhadap bahaya kebakaran.”
+                </p>
+
+                <div class="summary-features">
+                    <div class="sf-box">
+                        <div class="sf-title">FUNGSI UTAMA</div>
+                        <div class="sf-desc">Mendeteksi Asap</div>
+                    </div>
+                    <div class="sf-box">
+                        <div class="sf-title">PERINGATAN</div>
+                        <div class="sf-desc">Buzzer + LED</div>
+                    </div>
+                    <div class="sf-box">
+                        <div class="sf-title">TEKNOLOGI</div>
+                        <div class="sf-desc">Arduino UNO R3 + MQ-2</div>
+                    </div>
+                </div>
+
+                <div class="closing-quote">
+                    “Deteksi lebih awal, peringatan lebih cepat, keselamatan lebih terjaga.”
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Controls -->
+    <footer>
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">
+            &#8592; PREVIOUS
+        </button>
+        <div style="font-family: 'JetBrains Mono'; font-size: 0.8rem; color: var(--text-muted);">
+            Gunakan tombol panah keyboard [← / →] untuk navigasi
+        </div>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">
+            NEXT &#8594;
+        </button>
+    </footer>
+
+    <!-- Presentation Controller JavaScript -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 7;
+
+        function updateSlide() {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Show active slide
+            const activeSlide = document.getElementById(`slide-${currentSlide}`);
+            if (activeSlide) {
+                activeSlide.classList.add('active');
+            }
+
+            // Update Page Indicator (e.g. 01 / 07)
+            const formattedCurrent = String(currentSlide).padStart(2, '0');
+            const formattedTotal = String(totalSlides).padStart(2, '0');
+            document.getElementById('slideIndicator').innerText = `${formattedCurrent} / ${formattedTotal}`;
+
+            // Button Disable States
+            document.getElementById('prevBtn').disabled = (currentSlide === 1);
+            document.getElementById('nextBtn').disabled = (currentSlide === totalSlides);
+        }
+
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 1 && newSlide <= totalSlides) {
+                currentSlide = newSlide;
+                updateSlide();
+            }
+        }
+
+        // Keyboard Navigation Support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Initialize state
+        updateSlide();
+    </script>
+</body>
+</html>
